@@ -17,6 +17,8 @@ const Paraphrase = () => {
   const [copiedIndex, setCopiedIndex] = useState(-1);
   const [loading, setLoading] = useState(false);
   const [showToaster, setShowToaster] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+  const [toasterMessage, setToasterMessage] = useState("");
 
   const showToast = () => {
     setShowToaster(true);
@@ -28,10 +30,21 @@ const Paraphrase = () => {
 
   const handleParaphrase = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the page from reloading when the form is submitted
-    if (question === "") {
+
+    if (characterCount > 500) {
+      setToasterMessage("You have exceeded the character limit");
       showToast();
       return;
     }
+
+    if (question === "") {
+      setToasterMessage("Write something dumb bitch");
+      showToast();
+      return;
+    }
+
+    // replace all double quotes with single quotes
+    const sanitizedQuestion = question.replace(/"/g, "'");
     setLoading(true); // Set loading state to true before making the API call
 
     try {
@@ -41,7 +54,7 @@ const Paraphrase = () => {
           Authorization: "Bearer 9NAPacYgIgU1d6vkAbERX1OQx7WTyp2k",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: question }),
+        body: JSON.stringify({ text: sanitizedQuestion }),
       });
 
       const data = await response.json();
@@ -68,16 +81,26 @@ const Paraphrase = () => {
     }
   };
 
+  const handleCharacterCount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputText = e.target.value;
+    const newCharacterCount = inputText.length;
+    setCharacterCount(newCharacterCount);
+  };
+
   return (
     <section className="flex flex-col gap-10">
       <form onSubmit={handleParaphrase}>
+        <div className="text-center font-extralight text-pink-400">{500 - characterCount} characters</div>
         <div className="flex w-full justify-between items-center gap-10">
           <input
             type="text"
             className="w-full outline-none placeholder-pink-400 bg-gray-800 text-white p-4 rounded-lg mb-4"
             placeholder="Write Here..."
             value={question}
-            onChange={(e) => setQuestion(e.target.value)}
+            onChange={(e) => {
+              setQuestion(e.target.value);
+              handleCharacterCount(e);
+            }}
           />
 
           <button
@@ -98,7 +121,7 @@ const Paraphrase = () => {
       </form>
       {showToaster && (
         <Toaster
-          message="write something dumb bitch"
+          message={toasterMessage}
           duration={5000} // Duration in milliseconds (5 seconds in this example)
           onClose={closeToaster}
         />
