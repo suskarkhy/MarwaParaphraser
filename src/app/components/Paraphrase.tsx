@@ -90,8 +90,10 @@ const Paraphrase = () => {
   return (
     <section className="flex flex-col gap-10">
       <form onSubmit={handleParaphrase}>
-        <div className="text-center font-extralight text-pink-400">{500 - characterCount} characters</div>
-        <div className="flex w-full justify-between items-center gap-10">
+        <div className="text-center font-extralight py-10 text-pink-400">
+          {500 - characterCount} characters
+        </div>
+        <div className="lg:flex w-full justify-between items-center gap-10">
           <input
             type="text"
             className="w-full outline-none placeholder-pink-400 bg-gray-800 text-white p-4 rounded-lg mb-4"
@@ -103,20 +105,22 @@ const Paraphrase = () => {
             }}
           />
 
-          <button
-            className="h-24 w-36 outline-none font-light bg-gray-600 text-pink-400 rounded-full hover:bg-pink-400 transition-all duration-300 ease-in-out hover:text-black"
-            type="submit"
-          >
-            Paraphrase
-          </button>
+          <div className="flex justify-center gap-5">
+            <button
+              className="lg:h-24 lg:w-36 h-20 w-32 outline-none font-light bg-gray-600 text-pink-400 rounded-full hover:bg-pink-400 transition-all duration-300 ease-in-out hover:text-black"
+              type="submit"
+            >
+              Paraphrase
+            </button>
 
-          <button
-            className="h-24 w-36 outline-none font-light bg-gray-600 text-pink-400 rounded-full hover:bg-pink-400 transition-all duration-300 ease-in-out hover:text-black"
-            onClick={() => clearInput()}
-            type="button"
-          >
-            Clear
-          </button>
+            <button
+              className="lg:h-24 lg:w-36 h-20 w-32 outline-none font-light bg-gray-600 text-pink-400 rounded-full hover:bg-pink-400 transition-all duration-300 ease-in-out hover:text-black"
+              onClick={() => clearInput()}
+              type="button"
+            >
+              Clear
+            </button>
+          </div>
         </div>
       </form>
       {showToaster && (
@@ -140,7 +144,7 @@ const Paraphrase = () => {
                 key={index}
               >
                 <p className="cursor-pointer">{result.text}</p>
-                <button>
+                <button className="pl-5">
                   {copiedIndex === index ? (
                     <AiOutlineCheck className="text-2xl text-pink-400" />
                   ) : (
