@@ -1,10 +1,19 @@
 "use client";
 import { useState } from "react";
 import { AiOutlineCopy, AiOutlineCheck, AiOutlineLoading } from "react-icons/ai";
+import axios from "axios";
 
 const Paraphrase = () => {
+  interface ParaphrasedResult {
+    id: string;
+    suggestions: { text: string }[];
+  }
+
   const [question, setQuestion] = useState("");
-  const [paraphrasedResult, setParaphrasedResult] = useState([]);
+  const [paraphrasedResult, setParaphrasedResult] = useState<ParaphrasedResult>({
+    id: "",
+    suggestions: [],
+  });
   const [copiedIndex, setCopiedIndex] = useState(-1);
   const [loading, setLoading] = useState(false);
 
@@ -12,16 +21,17 @@ const Paraphrase = () => {
     setLoading(true); // Set loading state to true before making the API call
 
     try {
-      const response = await fetch("/api/paraphrase", {
+      const response = await fetch("https://api.ai21.com/studio/v1/paraphrase", {
         method: "POST",
         headers: {
+          Authorization: "Bearer 9NAPacYgIgU1d6vkAbERX1OQx7WTyp2k",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ question: question }),
+        body: JSON.stringify({ text: question }),
       });
 
       const data = await response.json();
-      setParaphrasedResult(data.result);
+      setParaphrasedResult(data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -61,13 +71,13 @@ const Paraphrase = () => {
       ) : (
         paraphrasedResult && (
           <div className="flex flex-col items-center gap-5 text-white">
-            {paraphrasedResult.map((result, index) => (
+            {paraphrasedResult.suggestions.map((result, index) => (
               <div
-                onClick={() => copyText(result, index)}
+                onClick={() => copyText(result.text, index)}
                 className="flex justify-between w-4/5 p-10 bg-gray-600"
                 key={index}
               >
-                <p className="cursor-pointer">{result}</p>
+                <p className="cursor-pointer">{result.text}</p>
                 <button>
                   {copiedIndex === index ? (
                     <AiOutlineCheck className="text-2xl text-pink-400" />
