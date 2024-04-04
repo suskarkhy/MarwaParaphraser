@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
-import { AiOutlineCopy, AiOutlineCheck, AiOutlineLoading } from "react-icons/ai";
+import {
+  AiOutlineCopy,
+  AiOutlineCheck,
+  AiOutlineLoading,
+} from "react-icons/ai";
 import Toaster from "./Toaster";
 
 const Paraphrase = () => {
@@ -10,10 +14,12 @@ const Paraphrase = () => {
   }
 
   const [question, setQuestion] = useState("");
-  const [paraphrasedResult, setParaphrasedResult] = useState<ParaphrasedResult>({
-    id: "",
-    suggestions: [],
-  });
+  const [paraphrasedResult, setParaphrasedResult] = useState<ParaphrasedResult>(
+    {
+      id: "",
+      suggestions: [],
+    }
+  );
   const [copiedIndex, setCopiedIndex] = useState(-1);
   const [loading, setLoading] = useState(false);
   const [showToaster, setShowToaster] = useState(false);
@@ -38,7 +44,7 @@ const Paraphrase = () => {
     }
 
     if (question === "") {
-      setToasterMessage("Write something dumb bitch");
+      setToasterMessage("Write something please");
       showToast();
       return;
     }
@@ -48,15 +54,17 @@ const Paraphrase = () => {
     setLoading(true); // Set loading state to true before making the API call
 
     try {
-      const response = await fetch("https://api.ai21.com/studio/v1/paraphrase", {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer 9NAPacYgIgU1d6vkAbERX1OQx7WTyp2k",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: sanitizedQuestion }),
-      });
-
+      const response = await fetch(
+        "https://api.ai21.com/studio/v1/paraphrase",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer 0HBPPavJAOyFfYteMQa9ioZ5brXseFVZ",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: sanitizedQuestion }),
+        }
+      );
       const data = await response.json();
       setParaphrasedResult(data);
     } catch (error) {
